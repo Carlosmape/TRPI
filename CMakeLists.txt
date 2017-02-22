@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( TRPI )
+find_package( OpenCV REQUIRED )
+add_executable( TRPI main.cpp )
+include_directories (${OpenCV_INCLUDE_DIRS})
+target_link_libraries( TRPI ${OpenCV_LIBS} )
