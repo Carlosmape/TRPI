@@ -1,7 +1,7 @@
 # TRPI
 Desarrollo de mi trabajo de final de grado en un Algoritmo de trackign para Raspberry usando OpenCV
 ##Descarga e instalación
-Descargar versión OpenCV2
+Descargar última versión OpenCV   
 `git clone https://github.com/Carlosmape/TRPI.git`   
 `cd TRPI`     
 `cmake .`    
