@@ -10,7 +10,8 @@ Desarrollo de mi Trabajo de Final de Grado en la Universidad de La Laguna en un 
 * Luego las dependencias requeridas:
 `sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev`
 * *Librerías opcionales:  
-`sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev`   
+`sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev`       
+   
 ###Descargar y descomprime la última versión de OpenCV  
 * Descarga OpenCV desde su repositorio  
 `git clone https://github.com/Itseez/opencv.git`  
