@@ -24,14 +24,8 @@ class PacaConection{
 				connect(pacaSocket, (struct sockaddr *)&paca, sizeof(paca)); 
 		}
 		int sendPaca(char* mensaje){ //envía el mensaje a PACA
-			timeAct = clock();
-			if(timeAct-timeAnt > 1000){ //comprobamos que han pasado almenos 3 milisegundos para no ahogar a PACA
-				if (send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
-					//continuarEnvioDatos = false;
-					//mensajeAnterior = mensaje;
-					timeAnt = timeAct;
-					return 0;
-				}
+			if (send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
+				return 0;
 			}
 			return -1;
 		}

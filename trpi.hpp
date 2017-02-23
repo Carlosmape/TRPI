@@ -72,8 +72,7 @@ class Trpi{
 			cap.open(0);
 			//video capture objeto para adquirir los frames
 			//Ajustamos la resolución de la cámara y habilitamos la exposicion automatica por si no la trae habilitada por defecto
-			//cap.set(CV_CAP_PROP_AUTO_EXPOSURE, 1);
-			cap.set(CV_CAP_PROP_FPS, 2);
+			cap.set(CV_CAP_PROP_AUTO_EXPOSURE, 1);
 			cap.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
 			cap.set(CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
 			
@@ -337,35 +336,34 @@ class Trpi{
 		ss << number;
 		return ss.str();
 	}
+	
 	string seguirGuia(){
-		//if ((clock()-timeAnt>1000)){		//Limitamos la lectura del siguiente frame para descargar de peso a la RPI	
-			while (1) {
+		while (1) {
 
-				cap >> camera;	//lee el siguiente frame
-				
-				//Guarda en HSV la imagen original transformada al esquema de colores HSV
-				cvtColor(camera,HSV,COLOR_BGR2HSV);
-				//Filtra el rango e olor en la imagen hsv y el resultado en threshold que indicará a presencia del guía
-				inRange(HSV,Scalar(objectColor.H_MIN,objectColor.S_MIN,objectColor.V_MIN),Scalar(objectColor.H_MAX,objectColor.S_MAX,objectColor.V_MAX),thresholded);
-				
-				morphOps(thresholded);
-				
-				//pasamos threshold a la función para obtener su posición dentro de la imagen
-				//y mostrar por pantalla la valocidad de movimiento y la dirección del guía
-				string outputSymbols = checkSymbols(symbols,camera);
-				string outputObject = trackFilteredObject(x,y,thresholded,camera);
+			cap >> camera;	//lee el siguiente frame
+			
+			//Guarda en HSV la imagen original transformada al esquema de colores HSV
+			cvtColor(camera,HSV,COLOR_BGR2HSV);
+			//Filtra el rango e olor en la imagen hsv y el resultado en threshold que indicará a presencia del guía
+			inRange(HSV,Scalar(objectColor.H_MIN,objectColor.S_MIN,objectColor.V_MIN),Scalar(objectColor.H_MAX,objectColor.S_MAX,objectColor.V_MAX),thresholded);
+			
+			morphOps(thresholded);
+			
+			//pasamos threshold a la función para obtener su posición dentro de la imagen
+			//y mostrar por pantalla la valocidad de movimiento y la dirección del guía
+			string outputSymbols = checkSymbols(symbols,camera);
+			string outputObject = trackFilteredObject(x,y,thresholded,camera);
 
-				if (outputObject!=std::string() && outputSymbols!="0.0,0.0,1/\n"){ //GUÍA a no ser que haya una señal STOP
-						timeAnt = clock();
-						return outputObject;
-				}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
+			if (outputObject!=std::string() && outputSymbols!="0.0,0.0,1/\n"){ //GUÍA a no ser que haya una señal STOP
 					timeAnt = clock();
-					return outputSymbols;
-				}
-				waitKey(20);
+					return outputObject;
+			}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
+				timeAnt = clock();
+				return outputSymbols;
 			}
-		//}
-		return "";
+			waitKey(20);
+		}
+	return "";
 	}
 	 
 };
