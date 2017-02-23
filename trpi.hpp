@@ -72,7 +72,8 @@ class Trpi{
 			cap.open(0);
 			//video capture objeto para adquirir los frames
 			//Ajustamos la resolución de la cámara y habilitamos la exposicion automatica por si no la trae habilitada por defecto
-			cap.set(CV_CAP_PROP_AUTO_EXPOSURE, 1);
+			//cap.set(CV_CAP_PROP_AUTO_EXPOSURE, 1);
+			cap.set(CV_CAP_PROP_FPS, 2);
 			cap.set(CV_CAP_PROP_FRAME_WIDTH,FRAME_WIDTH);
 			cap.set(CV_CAP_PROP_FRAME_HEIGHT,FRAME_HEIGHT);
 			
@@ -120,7 +121,7 @@ class Trpi{
 						//if the area is the same as the 3/2 of the image size, probably just a bad filter
 						//we only want the object with the largest area so we safe a reference area each
 						//iteration and compare it to the area in the next iteration.
-						if(area>MIN_OBJECT_AREA && area<MAX_OBJECT_AREA && area>refArea && (clock()-timeAnt>10000)){ /*OBJECT FOUND*/
+						if(area>MIN_OBJECT_AREA && area<MAX_OBJECT_AREA && area>refArea){ /*OBJECT FOUND*/
 							xtmp = moment.m10/area;
 							ytmp = moment.m01/area;
 							objectFound = true;
@@ -130,7 +131,6 @@ class Trpi{
 							y=ytmp;
 							x=xtmp;
 							areaant = area;
-							timeAnt = clock();
 						}
 					}
 
@@ -338,33 +338,34 @@ class Trpi{
 		return ss.str();
 	}
 	string seguirGuia(){
-		double t = (double) getTickCount();
-		cap >> camera;		
-		while (1) {
+		//if ((clock()-timeAnt>1000)){		//Limitamos la lectura del siguiente frame para descargar de peso a la RPI	
+			while (1) {
 
-			t = (double) getTickCount() - t;
+				cap >> camera;	//lee el siguiente frame
+				
+				//Guarda en HSV la imagen original transformada al esquema de colores HSV
+				cvtColor(camera,HSV,COLOR_BGR2HSV);
+				//Filtra el rango e olor en la imagen hsv y el resultado en threshold que indicará a presencia del guía
+				inRange(HSV,Scalar(objectColor.H_MIN,objectColor.S_MIN,objectColor.V_MIN),Scalar(objectColor.H_MAX,objectColor.S_MAX,objectColor.V_MAX),thresholded);
+				
+				morphOps(thresholded);
+				
+				//pasamos threshold a la función para obtener su posición dentro de la imagen
+				//y mostrar por pantalla la valocidad de movimiento y la dirección del guía
+				string outputSymbols = checkSymbols(symbols,camera);
+				string outputObject = trackFilteredObject(x,y,thresholded,camera);
 
-			cap >> camera;	//lee el siguiente frame
-			
-			//Guarda en HSV la imagen original transformada al esquema de colores HSV
-			cvtColor(camera,HSV,COLOR_BGR2HSV);
-			//Filtra el rango e olor en la imagen hsv y el resultado en threshold que indicará a presencia del guía
-			inRange(HSV,Scalar(objectColor.H_MIN,objectColor.S_MIN,objectColor.V_MIN),Scalar(objectColor.H_MAX,objectColor.S_MAX,objectColor.V_MAX),thresholded);
-			
-			morphOps(thresholded);
-			
-			//pasamos threshold a la función para obtener su posición dentro de la imagen
-			//y mostrar por pantalla la valocidad de movimiento y la dirección del guía
-			string outputSymbols = checkSymbols(symbols,camera);
-			string outputObject = trackFilteredObject(x,y,thresholded,camera);
-
-			if (outputObject!=std::string() && outputSymbols!="0.0,0.0,1/\n"){ //GUÍA a no ser que haya una señal STOP
-					return outputObject;
-			}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
-				return outputSymbols;
+				if (outputObject!=std::string() && outputSymbols!="0.0,0.0,1/\n"){ //GUÍA a no ser que haya una señal STOP
+						timeAnt = clock();
+						return outputObject;
+				}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
+					timeAnt = clock();
+					return outputSymbols;
+				}
+				waitKey(20);
 			}
-			waitKey(20);
-		}
+		//}
+		return "";
 	}
 	 
 };

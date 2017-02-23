@@ -32,14 +32,16 @@ int main(int argc, char** argv) {
 	
 	while (1){ //bucle de funcionamiento
 		string strorden = raspberry.seguirGuia(); //capturamos la orden a enviar
-		orden =new char[strorden.size() + 1];			//la guardamos en un char* para enviarla
-		strcpy(orden, strorden.c_str());
+		if (strorden != ""){
+			orden =new char[strorden.size() + 1];			//la guardamos en un char* para enviarla
+			strcpy(orden, strorden.c_str());
 
-		//ahora convertimos la salida de Trpi a valores que devolvería un joystick
-		if(paca.sendPaca(orden) == 0){
-			cout<<"Orden enviada"<<endl;
-		}else{
-			cout<<"x ERROR: sendPaca no funciona"<<endl;
+			//ahora convertimos la salida de Trpi a valores que devolvería un joystick
+			if(paca.sendPaca(orden) == 0){
+				cout<<"Orden enviada"<<endl;
+			}else{
+				cout<<"x ERROR: sendPaca no funciona"<<endl;
+			}
 		}
 		delete orden;
 	}
