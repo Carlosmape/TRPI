@@ -2,11 +2,9 @@
 Desarrollo de mi Trabajo de Final de Grado en la Universidad de La Laguna en un Algoritmo de trackign para Raspberry usando OpenCV
 ##Descarga e instalación
 ###Instalar dependencias
-* Actualizamos la raspberry
-`sudo apt-get update  
-sudo apt-get upgrade  
-sudo rpi-update  
-sudo reboot`  
+* Actualizamos la raspberry:  
+`sudo apt-get update && sudo apt-get upgrade && sudo rpi-update`  
+`sudo reboot`  
 * Primero herramientas para la compilación:
 `sudo apt-get install build-essential`  
 * Luego las dependencias requeridas:
