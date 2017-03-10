@@ -8,7 +8,7 @@
 using namespace cv;
 using namespace std;
 
-const char* IPADRESS = "127.0.0.1"; //Indica la ip del receptor del mensaje (puerto 8888)
+const char* IPADRESS = "192.168.4.1"; //Indica la ip del receptor del mensaje (puerto 8888)
 
 const int H_MIN = 0;
 const int H_MAX = 16;
