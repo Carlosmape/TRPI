@@ -20,12 +20,15 @@ class PacaConection{
 			paca.sin_family = AF_INET;
 			paca.sin_port = htons(9999);
 			paca.sin_addr.s_addr = inet_addr(ipaddress);
-			if(pacaSocket = socket(AF_INET,SOCK_STREAM,0));
-				connect(pacaSocket, (struct sockaddr *)&paca, sizeof(paca)); 
+			pacaSocket = socket(AF_INET,SOCK_STREAM,0);
 		}
 		int sendPaca(char* mensaje){ //envía el mensaje a PACA
-			if (send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
-				return 0;
+			if (connect(pacaSocket, (struct sockaddr *)&paca, sizeof(paca)){
+				if(send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
+					close(pacaSocket);
+					return 0;
+				else
+					return -1;
 			}
 			return -1;
 		}
