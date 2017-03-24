@@ -23,7 +23,7 @@ class PacaConection{
 			pacaSocket = socket(AF_INET,SOCK_STREAM,0);
 		}
 		int sendPaca(char* mensaje){ //envía el mensaje a PACA
-			if (connect(pacaSocket, (struct sockaddr *)&paca, sizeof(paca)){
+			if (connect(pacaSocket, (struct sockaddr *)&paca, sizeof(paca))){
 				if(send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
 					close(pacaSocket);
 					return 0;
