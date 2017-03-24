@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "interfazPaca.hpp"
 #include "trpi.hpp"
@@ -38,9 +39,9 @@ int main(int argc, char** argv) {
 	cout<<"Done."<<endl;
 	
 	while (1){ //bucle principal
-		timeAct = clock()/10000;
+		/*timeAct = clock()/10000;
 		if((timeAct-timeAnt) > 5){ //comprobamos que han pasado almenos 5 milisegundos para no ahogar a la raspberry
-			
+			*/
 			string strorden = raspberry.seguirGuia(); //capturamos la orden de TRPI a enviar
 			
 			if (strorden != ""){
@@ -53,7 +54,8 @@ int main(int argc, char** argv) {
 					cout<<"x ERROR: sendPaca"<<endl;
 			}
 			delete orden;
-			timeAnt=timeAct;
-		}
+			sleep(1);
+			/*timeAnt=timeAct;
+		}*/
 	}
 }

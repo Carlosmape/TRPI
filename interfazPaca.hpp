@@ -27,6 +27,7 @@ class PacaConection{
 				if(send(pacaSocket,mensaje,strlen(mensaje)+1,MSG_OOB)){
 					close(pacaSocket);
 					return 0;
+				}
 				else
 					return -1;
 			}
