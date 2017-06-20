@@ -328,7 +328,7 @@ class Trpi{
 	}
 	
 	string seguirGuia(){
-
+		while(1){
 			cap >> camera;	//lee el siguiente frame
 			
 			//Guarda en HSV la imagen original transformada al esquema de colores HSV
@@ -348,8 +348,8 @@ class Trpi{
 			}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
 				return outputSymbols;
 			}
-
-			return "";
+		}
+		return "";
 	}
 	 
 };
