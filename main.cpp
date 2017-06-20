@@ -50,12 +50,12 @@ int main(int argc, char** argv) {
 					strcpy(orden, strorden.c_str());
 
 					if(paca.sendPaca(orden) == 0)					//enviamos la posición del joystick
-						cout<<"Orden enviada"<<endl;
+						cout<<" Orden enviada"<<endl;
 					else
-						cout<<"x ERROR: sendPaca"<<endl;
+						cout<<" x ERROR: sendPaca"<<endl;
 				}
 				delete orden;
 			}
-			sleep(0.5);
+			sleep(1);
 	}
 }

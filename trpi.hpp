@@ -46,9 +46,7 @@ class Trpi{
 		
 		HSVrange objectColor;
 		Symbol symbols[7];
-		
-		clock_t timeAnt;//tiempo de envío del último mensaje
-				
+						
 	public:
 		Trpi(HSVrange colorGuia, int FRAME_WIDTH=640, int FRAME_HEIGHT=480){
 			objectColor.H_MIN = colorGuia.H_MIN;
@@ -60,7 +58,6 @@ class Trpi{
 			//localización del objeto
 			x=0, y=0;
 			areaant=0.0;
-			timeAnt = clock();
 			
 			//max number of objects to be detected in frame
 			MAX_NUM_OBJECTS=50;
@@ -125,7 +122,7 @@ class Trpi{
 							ytmp = moment.m01/area;
 							objectFound = true;
 							refArea = area;
-								output+=""+intToString((double)(ytmp-y)/10)+","+intToString((areaant-area)/100.00)+",1,TRPI/"+"\n";
+								output+="0,"+intToString((double)(ytmp-y)/10)+","+intToString((areaant-area)/100.00)+",1,TRPI/";
 							
 							y=ytmp;
 							x=xtmp;
@@ -171,49 +168,42 @@ class Trpi{
 			if (!symbols[0].img.data)
 				return -1;
 			threshold(symbols[0].img, symbols[0].img, 100, 255, 0);
-			symbols[0].name = "-0.5,0.0,1,TRPI/\n";//Izquierda 90 grados = -0.5,0.0,0/
+			symbols[0].name = "0,-0.5,0.0,1,TRPI/";//Izquierda 90 grados = -0.5,0.0,0/
 
 			symbols[1].img = imread("arrowT.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 			cout<<".";
 			if (!symbols[1].img.data)
 				return -1;
 			threshold(symbols[1].img, symbols[1].img, 100, 255, 0);
-			symbols[1].name = "Turn Around";
+			symbols[1].name = "0,0.0,0.0,0,TRPI/";//no funciona
 
 			symbols[2].img = imread("arrowL45.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 			cout<<".";
 			if (!symbols[2].img.data)
 				return -1;
 			threshold(symbols[2].img, symbols[2].img, 100, 255, 0);
-			symbols[2].name = "-0.5,-0.5,1,TRPI/\n";//Izquierda 45 grados = -0.5,0.5,0/
+			symbols[2].name = "0,-0.5,-0.5,1,TRPI/";//Izquierda 45 grados = -0.5,0.5,0/
 
 			symbols[3].img = imread("arrowR45.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 			cout<<".";
 			if (!symbols[3].img.data)
 				return -1;
 			threshold(symbols[3].img, symbols[3].img, 100, 255, 0);
-			symbols[3].name = "0.5,0.5,1,TRPI/\n";//Derecha 45 grados = 0.5,0.5,0/
+			symbols[3].name = "0,0.5,0.5,1,TRPI/";//Derecha 45 grados = 0.5,0.5,0/
 
 			symbols[4].img = imread("arrowStop.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 			cout<<".";
 			if (!symbols[4].img.data)
 				return -1;
 			threshold(symbols[4].img, symbols[4].img, 100, 255, 0);
-			symbols[4].name = "0.0,0.0,0,TRPI/\n";//STOP = 0.0,0.0,1/
-
-			symbols[5].img = imread("arrowGo.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+			symbols[4].name = "0,0.0,0.0,0,TRPI/";//STOP = 0.0,0.0,1/
+			
+			symbols[5].img = imread("arrowR.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 			cout<<".";
 			if (!symbols[5].img.data)
 				return -1;
 			threshold(symbols[5].img, symbols[5].img, 100, 255, 0);
-			symbols[5].name = "Go";
-			
-			symbols[6].img = imread("arrowR.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-			cout<<".";
-			if (!symbols[6].img.data)
-				return -1;
-			threshold(symbols[6].img, symbols[6].img, 100, 255, 0);
-			symbols[6].name = "0.5,0.0,1,TRPI/\n"; //Derecha 90 grados = 0.5,0.0,0/
+			symbols[5].name = "0,0.5,0.0,1,TRPI/"; //Derecha 90 grados = 0.5,0.0,0/
 			cout<<" Done."<<endl;
 
 			return 0;
@@ -306,7 +296,7 @@ class Trpi{
 						minDiff = 12000;
 						match = -1;
 
-						for (int i = 0; i < 7; i++) {
+						for (int i = 0; i < 6; i++) {
 							//diffImg = symbols[i].img-correctedImgBin;
 
 							bitwise_xor(new_image, symbols[i].img, diffImg,	noArray());
@@ -338,7 +328,6 @@ class Trpi{
 	}
 	
 	string seguirGuia(){
-		while (1) {
 
 			cap >> camera;	//lee el siguiente frame
 			
@@ -354,16 +343,13 @@ class Trpi{
 			string outputSymbols = checkSymbols(symbols,camera);
 			string outputObject = trackFilteredObject(x,y,thresholded,camera);
 
-			if (outputObject!=std::string() && outputSymbols!="0.0,0.0,0,TRPI/\n"){ //GUÍA a no ser que haya una señal STOP
-					timeAnt = clock();
-					return outputObject;
+			if (outputObject!=std::string() && outputSymbols!="0,0.0,0.0,0,TRPI/"){ //GUÍA a no ser que haya una señal STOP
+				return outputObject;
 			}else	if(outputSymbols!=std::string()){ //SI NO => SIGNO
-				timeAnt = clock();
 				return outputSymbols;
 			}
-			waitKey(20);
-		}
-	return "";
+
+			return "";
 	}
 	 
 };
