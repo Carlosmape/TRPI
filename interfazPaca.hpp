@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>	
 #include <sys/socket.h> //socket para comunicación wifi
+#include <stdlib.h>
 
 using namespace std;
 
@@ -31,5 +32,13 @@ class PacaConection{
 			else
 				return -1;
 		}
+		int recivePaca(){
+			printf("Recibiendo de paca");
+			char buffer[1024];
+			int bytes = recv(pacaSocket, buffer, 1024, 0);
+			printf("%d bytes: %d\n", bytes, atoi(buffer));
+			return atoi(buffer);
+		}
+		
 	
 };

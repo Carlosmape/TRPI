@@ -39,23 +39,23 @@ int main(int argc, char** argv) {
 	cout<<"Done."<<endl;
 	
 	while (1){ //bucle principal
-		/*timeAct = clock()/10000;
-		if((timeAct-timeAnt) > 5){ //comprobamos que han pasado almenos 5 milisegundos para no ahogar a la raspberry
-			*/
-			string strorden = raspberry.seguirGuia(); //capturamos la orden de TRPI a enviar
+			//Comprobamos si PACA quiere que TRPI funcione o no
+			int controlPaca = paca.recivePaca();
 			
-			if (strorden != ""){
-				orden =new char[strorden.size() + 1];			//la guardamos en un char* para enviarla
-				strcpy(orden, strorden.c_str());
+			if(controlPaca==3){ //Si PACA está en MODO AUTO encendemos el seguimiento
+				string strorden = raspberry.seguirGuia(); //capturamos la orden de TRPI a enviar
 
-				if(paca.sendPaca(orden) == 0)					//enviamos la posición del joystick
-					cout<<"Orden enviada"<<endl;
-				else
-					cout<<"x ERROR: sendPaca"<<endl;
+				if (strorden != ""){
+					orden =new char[strorden.size() + 1];			//la guardamos en un char* para enviarla
+					strcpy(orden, strorden.c_str());
+
+					if(paca.sendPaca(orden) == 0)					//enviamos la posición del joystick
+						cout<<"Orden enviada"<<endl;
+					else
+						cout<<"x ERROR: sendPaca"<<endl;
+				}
+				delete orden;
 			}
-			delete orden;
-			sleep(1);
-			/*timeAnt=timeAct;
-		}*/
+			sleep(0.5);
 	}
 }
